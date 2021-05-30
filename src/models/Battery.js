@@ -1,6 +1,6 @@
 const {Model,DataTypes} = require('sequelize');
 
-class Device extends Model {
+class Battery extends Model {
     static init(sequelize){
         super.init({
           
@@ -20,8 +20,7 @@ class Device extends Model {
         this.belongsTo(models.Type , { foreignKey: 'type_id', as: 'types'});
         this.belongsTo(models.Modelo , { foreignKey: 'modelo_id', as: 'modelos'});
         this.belongsTo(models.Status , { foreignKey: 'status_id', as: 'status'});
-
     }
 }
 
-module.exports = Device;
+module.exports = Battery;

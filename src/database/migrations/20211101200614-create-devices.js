@@ -26,6 +26,13 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
+      status_id:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'status',key:'id'},
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
       
       code:{
         type: Sequelize.STRING,

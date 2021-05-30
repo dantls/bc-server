@@ -4,7 +4,9 @@ const User = require('../models/User');
 const Brand = require('../models/Brand');
 const Type = require('../models/Type');
 const Modelo = require('../models/Modelo');
+const Battery = require('../models/Battery');
 const Device = require('../models/Device');
+const Status = require('../models/Status');
 
 const connection = new Sequelize(dbConfig);
 
@@ -13,11 +15,15 @@ Brand.init(connection);
 Type.init(connection);
 Modelo.init(connection);
 Device.init(connection);
+Battery.init(connection);
+Status.init(connection);
 
 Modelo.associate(connection.models);
 Brand.associate(connection.models);
 Type.associate(connection.models);
+Status.associate(connection.models);
 Device.associate(connection.models);
+Battery.associate(connection.models);
 
 
 module.exports = connection;

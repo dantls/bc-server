@@ -5,11 +5,9 @@ const Status = require('../models/Status');
 
 module.exports = {
     async store(req,res){
-
         
-        const{code,purchase,type_id,status_id,modelo_id,serie} = req.body;
+        const{code,purchase,type_id,modelo_id,status_id,serie} = req.body;
              
-
         const modelo = await Modelo.findByPk(modelo_id);
         const status = await Status.findByPk(status_id);
         const type = await Type.findByPk(type_id);
@@ -26,19 +24,19 @@ module.exports = {
 
         
 
-        const device = await Device.create({code,purchase,type_id,modelo_id,status_id,serie});
+        const battery = await Device.create({code,purchase,type_id,status_id,modelo_id,serie});
 
-        return res.json(device);
+        return res.json(battery);
 
     },
     async index(req,res){                
 
-        const devices = await Device.findAll({
+        const batteries = await Device.findAll({
             include: [{association: 'modelos'}, {association: 'types'}]
         });
 
        
-        return res.json(devices);
+        return res.json(batteries);
 
     }
 

@@ -6,6 +6,8 @@ const BrandController = require('./controllers/BrandController');
 
 const TypeController = require('./controllers/TypeController');
 
+const StatusController = require('./controllers/StatusController');
+
 const ModeloController = require('./controllers/ModeloController');
 
 const DeviceController = require('./controllers/DeviceController');
@@ -25,6 +27,9 @@ routes.get('/brands', BrandController.index);
 
 routes.post('/types', TypeController.store);
 routes.get('/types', TypeController.index);
+
+routes.post('/status', StatusController.store);
+routes.get('/status', StatusController.index);
 
 //routes.post('/brands/:brand_id/models', ModeloController.store);
 routes.post('/models', ModeloController.store);
