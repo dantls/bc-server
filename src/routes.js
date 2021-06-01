@@ -14,6 +14,8 @@ const DeviceController = require('./controllers/DeviceController');
 
 const BatteryController = require('./controllers/BatteryController');
 
+const ServicesController = require('./controllers/ServicesController');
+
 const SessionController = require('./controllers/SessionController');
 
 const routes = express.Router();
@@ -42,5 +44,9 @@ routes.get('/devices', DeviceController.index);
 
 routes.post('/batteries', BatteryController.store);
 routes.get('/batteries', BatteryController.index);
+
+
+routes.post('/services', ServicesController.store);
+routes.get('/services', ServicesController.index);
 
 module.exports = routes;
