@@ -22,9 +22,7 @@ module.exports = {
         }
         if(!status){
             return res.status(400).json({error : 'Status não encontrado!'});
-        }
-
-        
+        }       
 
         const device = await Device.create({code,purchase,type_id,modelo_id,status_id,serie});
 
@@ -34,7 +32,11 @@ module.exports = {
     async index(req,res){                
 
         const devices = await Device.findAll({
-            include: [{association: 'modelos'}, {association: 'types'}]
+            include: [
+                {association: 'modelos'}, 
+                {association: 'types'}, 
+                {association: 'status'}
+            ]
         });
 
        

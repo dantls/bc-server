@@ -8,11 +8,12 @@ class Battery extends Model {
               type_id:DataTypes.INTEGER,
               status_id:DataTypes.INTEGER,
               code: DataTypes.STRING, 
-              serie: DataTypes.STRING, 
               purchase: DataTypes.DATE,       
             
         },{
-            sequelize
+            sequelize,
+            modelName: 'Battery',
+            tableName: 'batteries',
         })
     }
     

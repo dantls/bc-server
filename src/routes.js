@@ -12,6 +12,8 @@ const ModeloController = require('./controllers/ModeloController');
 
 const DeviceController = require('./controllers/DeviceController');
 
+const BatteryController = require('./controllers/BatteryController');
+
 const SessionController = require('./controllers/SessionController');
 
 const routes = express.Router();
@@ -37,5 +39,8 @@ routes.get('/:brand_id/models', ModeloController.index);
 
 routes.post('/devices', DeviceController.store);
 routes.get('/devices', DeviceController.index);
+
+routes.post('/batteries', BatteryController.store);
+routes.get('/batteries', BatteryController.index);
 
 module.exports = routes;

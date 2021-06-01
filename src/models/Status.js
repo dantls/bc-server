@@ -6,7 +6,9 @@ class Status extends Model {
             name: DataTypes.STRING,
             
         },{
-            sequelize
+            sequelize,
+            modelName: 'Status',
+            tableName: 'status',
         })
     }
     static associate(models){

@@ -19,7 +19,7 @@ class Device extends Model {
     static associate(models){
         this.belongsTo(models.Type , { foreignKey: 'type_id', as: 'types'});
         this.belongsTo(models.Modelo , { foreignKey: 'modelo_id', as: 'modelos'});
-        this.belongsTo(models.Status , { foreignKey: 'status_id', as: 'status'});
+        this.belongsTo(models.Status , { foreignKey: 'status_id', as: 'status'} );
 
     }
 }
