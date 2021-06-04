@@ -22,8 +22,6 @@ module.exports = {
             return res.status(400).json({error : 'Status não encontrado!'});
         }
 
-        
-
         const battery = await Battery.create({code,purchase,type_id,status_id,modelo_id});
 
         return res.json(battery);

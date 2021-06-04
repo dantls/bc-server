@@ -12,11 +12,17 @@ module.exports = {
         const{battery_id,device_id} = req.body;
         // const{battery_id} = req.params;
 
-        const status = await Status.findOne({ where: 
+        const statusExe = await Status.findOne({ where: 
             { name: 'Execução' } 
         });
+        const statusFim = await Status.findOne({ where: 
+            { name: 'Finalizado' } 
+        });
         
-        if(!status){
+        if(!statusExe){
+            return res.status(400).json({error : 'Status não encontrado!'});
+        } 
+        if(!statusFim){
             return res.status(400).json({error : 'Status não encontrado!'});
         } 
         
@@ -32,23 +38,27 @@ module.exports = {
             return res.status(400).json({error : 'Equipamento não encontrado!'});
         }
 
-        const service = await Service.update(
+        await Service.update(
             {
-                final_date: new Date()
+                final_date: new Date(),
+                status_id: statusFim.id,
             },
             { 
                 where: { 
                     final_date: { [Op.eq]: null  } ,
-                    device_id: {[Op.eq]: device_id},
                     battery_id: {[Op.eq]: battery_id}              
                 },    
                     
             },
         );
-
+        const newService = await Service.create({
+                    device_id,
+                    battery_id,
+                    status_id: statusExe.id,
+                    initial_date: new Date(),
+        });
       
         // const service = await Service.findAll(
-          
         //     { 
         //         where: { final_date: { [Op.eq]: null  } },    
         //         attributes:['id', 'initial_date', 'final_date'],       
@@ -82,17 +92,17 @@ module.exports = {
         //       type: QueryTypes.SELECT
         //     }
         // );
-        if(!service[0]){
-            const newService = await Service.create({
-                device_id,
-                battery_id,
-                status_id: status.id,
-                initial_date: new Date(),
-            });
-            return res.json(newService);
-        }
+        // if(!service[0]){
+        //     const newService = await Service.create({
+        //         device_id,
+        //         battery_id,
+        //         status_id: statusExe.id,
+        //         initial_date: new Date(),
+        //     });
+        //     return res.json(newService);
+        // }
 
-        return res.json(service);
+        return res.json(newService);
         
 
     },
