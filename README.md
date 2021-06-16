@@ -1,12 +1,12 @@
 <h3 name='api'>📦  Startar a API</h3><br>
 
 ```bash
-# Instale as dependencias
+# Instale as dependências
 $ yarn
 # Ligue a API
 $ yarn start
 ```
-Access API at http://localhost:3333/
+Access API at http://localhost:3335/
 
 <h1 name="tecnologias">🛠 Tecnologias</h1>
 
