@@ -27,7 +27,10 @@ routes.get('/users', UserController.index);
 
 
 routes.post('/brands', BrandController.store);
-routes.get('/brands', BrandController.index);
+routes.get('/brands/:id', BrandController.index);
+routes.put('/brands', BrandController.update);
+routes.delete('/brands/:id', BrandController.delete);
+routes.get('/brands', BrandController.show);
 
 routes.post('/types', TypeController.store);
 routes.get('/types', TypeController.index);

@@ -10,11 +10,46 @@ module.exports = {
 
     },
     async index(req,res){
+        const{id} = req.body    
+    
+    
+       const brand = await Brand.findByPk(id)
+
+       return res.json(brand)
+
+    },
+    async show(req,res){
     
        const brand = await Brand.findAll()
 
        return res.json(brand)
 
+    },
+    async delete(req,res){
+    
+       const {id} = req.params
+       
+       await Brand.destroy({
+        where: {
+          id
+        }
+       });
+       
+
+       return res.json({"message": "Ok"})
+    },
+    async update(req,res){
+    
+       const {id, name} = req.body
+       
+       await Brand.update({ name }, {
+        where: {
+            id
+        }
+      });
+       
+
+       return res.json({id, name})
     }
 
 };
