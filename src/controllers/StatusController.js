@@ -10,10 +10,49 @@ module.exports = {
     },
     async index(req,res){
     
-        const status = await Status.findAll();
+        const{id} = req.body 
+
+        const status = await Status.findByPk(id);
 
         return res.json(status);
 
-    }
+    },
+
+
+    async show(req,res){
+    
+        const status = await Status.findAll()
+ 
+        return res.json(status)
+ 
+     },
+    async delete(req,res){
+    
+        const {id} = req.params
+        
+        await Status.destroy({
+         where: {
+           id
+         }
+        });
+        
+ 
+        return res.json({"message": "Ok"})
+     },
+     async update(req,res){
+     
+        const {id, name} = req.body
+        
+        await Status.update({ name }, {
+         where: {
+             id
+         }
+       });
+        
+ 
+        return res.json({id, name})
+     }
+ 
+
 
 };

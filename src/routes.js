@@ -36,7 +36,11 @@ routes.post('/types', TypeController.store);
 routes.get('/types', TypeController.index);
 
 routes.post('/status', StatusController.store);
-routes.get('/status', StatusController.index);
+routes.get('/status', StatusController.show);
+routes.put('/status', StatusController.update);
+routes.delete('/status/:id', StatusController.delete);
+routes.get('/status/:id', StatusController.index);
+
 
 //routes.post('/brands/:brand_id/models', ModeloController.store);
 routes.post('/models', ModeloController.store);
