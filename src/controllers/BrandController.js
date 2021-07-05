@@ -9,8 +9,8 @@ module.exports = {
         return res.json(brand);
 
     },
-    async index(req,res){
-        const{id} = req.body    
+    async show(req,res){
+        const{id} = req.params    
     
     
        const brand = await Brand.findByPk(id)
@@ -18,7 +18,7 @@ module.exports = {
        return res.json(brand)
 
     },
-    async show(req,res){
+    async index(req,res){
     
        const brand = await Brand.findAll()
 

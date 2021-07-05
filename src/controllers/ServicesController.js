@@ -3,7 +3,6 @@ const Battery = require('../models/Battery');
 const Status = require('../models/Status');
 
 const Service = require('../models/Service');
-const sequelize = require('sequelize');
 const {Op}= require('sequelize');
 
 module.exports = {
@@ -108,13 +107,50 @@ module.exports = {
     },
     async index(req,res){                
 
-        const services = await Service.findAll({
-            include: [
-                {association: 'devices'}, 
-                {association: 'batteries'}, 
-                {association: 'status'}
-            ]
+        // const services = await Service.findAll({
+        //     include: [
+        //         {association: 'devices'}, 
+        //         {association: 'batteries'}, 
+        //         {association: 'status'}
+        //     ]
+        // });
+
+        const statusExe = await Status.findOne({ where: 
+            { name: 'Execução' } 
         });
+   
+        if(!statusExe){
+            return res.status(400).json({error : 'Status não encontrado!'});
+        } 
+ 
+   
+        const services = await Service.findAll(
+                { 
+                    where: { 
+                        final_date: { [Op.eq]: null  },
+                        status_id: statusExe.id
+                    
+                    },    
+                    // attributes:['id', 'initial_date', 'final_date'],       
+                    include:[
+                        {
+                            model: Battery,
+                            as: "batteries",
+                            attributes: ['code']
+                        },
+                        {
+                            model: Device,
+                            as: "devices",
+                            attributes: ['code']
+                        },
+                        {
+                            model: Status,
+                            as: "status",
+                            attributes: ['name']
+                        },
+                    ]      
+                },
+            );
 
        
         return res.json(services);

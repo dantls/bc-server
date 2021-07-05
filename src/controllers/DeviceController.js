@@ -9,6 +9,13 @@ module.exports = {
         
         const{code,purchase,type_id,status_id,modelo_id,serie} = req.body;
              
+        const typeBattery = await Type.findOne({ where: 
+            { name: 'Bateria' } 
+        });
+
+        if(!typeBattery){
+            return res.status(400).json({error : 'Tipo de equipamento não permitido!'});
+        }
 
         const modelo = await Modelo.findByPk(modelo_id);
         const status = await Status.findByPk(status_id);

@@ -20,8 +20,9 @@ Battery.init(connection);
 Status.init(connection);
 Service.init(connection);
 
-Modelo.associate(connection.models);
+
 Brand.associate(connection.models);
+Modelo.associate(connection.models);
 Type.associate(connection.models);
 Status.associate(connection.models);
 Device.associate(connection.models);

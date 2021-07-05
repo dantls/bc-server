@@ -8,9 +8,9 @@ module.exports = {
         return res.json(status);
 
     },
-    async index(req,res){
+    async show(req,res){
     
-        const{id} = req.body 
+        const{id} = req.params 
 
         const status = await Status.findByPk(id);
 
@@ -19,7 +19,7 @@ module.exports = {
     },
 
 
-    async show(req,res){
+    async index(req,res){
     
         const status = await Status.findAll()
  
