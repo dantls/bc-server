@@ -49,6 +49,77 @@ module.exports = {
        
         return res.json(devices);
 
-    }
+    },
+    async update(req,res){
+
+        const{id} = req.params; 
+
+     
+        const { 
+            code,
+            purchase,
+            type_id,
+            status_id,
+            modelo_id,
+            serie
+        } = req.body;
+
+        const type = await Type.findByPk(type_id);
+
+        if(!type){
+            return res.status(400).json({error : 'Tipo não encontrada!'});
+        }
+
+        const status = await Status.findByPk(status_id);
+
+        if(!status){
+            return res.status(400).json({error : 'Status não encontrado!'});
+        }
+
+        const modelo = await Modelo.findByPk(modelo_id);
+
+        if(!modelo){
+            return res.status(400).json({error : 'Modelo não encontrado!'});
+        }
+        
+       const [updateDevice] = await Device.update({
+            code,
+            purchase,
+            type_id,
+            status_id,
+            modelo_id,
+            serie
+        }, {
+         where: {
+             id
+         }
+       });
+
+       if (!updateDevice){
+           res.error(404)
+       }
+
+       const device = await  Device.findByPk(id , {
+            include:[
+                {
+                    model: Modelo,
+                    as: "modelos",
+                    attributes: ['id','name']
+                },
+                {
+                    model: Type,
+                    as: "types",
+                    attributes: ['id','name']
+                },
+                {
+                    model: Status,
+                    as: "status",
+                    attributes: ['id','name']
+                },
+            ] 
+       })
+
+       return res.json(device)
+    },
 
 };

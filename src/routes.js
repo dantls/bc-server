@@ -57,6 +57,7 @@ routes.get('/brands/:brand_id/models', ModeloBrandController.index);
 
 routes.post('/devices', DeviceController.store);
 routes.get('/devices', DeviceController.index);
+routes.put('/devices/:id', DeviceController.update);
 
 routes.post('/batteries', BatteryController.store);
 routes.get('/batteries', BatteryController.index);
