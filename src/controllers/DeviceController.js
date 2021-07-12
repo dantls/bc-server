@@ -121,5 +121,18 @@ module.exports = {
 
        return res.json(device)
     },
+    async delete(req,res){
+    
+        const {id} = req.params
+        
+        await Device.destroy({
+         where: {
+           id
+         }
+        });
+        
+        return res.json({"message": "Ok"})
+    },
+    
 
 };

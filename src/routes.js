@@ -58,10 +58,12 @@ routes.get('/brands/:brand_id/models', ModeloBrandController.index);
 routes.post('/devices', DeviceController.store);
 routes.get('/devices', DeviceController.index);
 routes.put('/devices/:id', DeviceController.update);
+routes.delete('/devices/:id', DeviceController.delete);
 
 routes.post('/batteries', BatteryController.store);
 routes.get('/batteries', BatteryController.index);
-
+routes.put('/batteries/:id', BatteryController.update);
+routes.delete('/batteries/:id', BatteryController.delete);
 
 routes.post('/services', ServicesController.store);
 routes.get('/services', ServicesController.index);
