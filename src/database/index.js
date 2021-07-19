@@ -8,6 +8,7 @@ const Battery = require('../models/Battery');
 const Device = require('../models/Device');
 const Status = require('../models/Status');
 const Service = require('../models/Service');
+const BatteryService = require('../models/BatteryService');
 
 const connection = new Sequelize(dbConfig);
 
@@ -19,6 +20,7 @@ Device.init(connection);
 Battery.init(connection);
 Status.init(connection);
 Service.init(connection);
+BatteryService.init(connection);
 
 
 Brand.associate(connection.models);
@@ -28,6 +30,7 @@ Status.associate(connection.models);
 Device.associate(connection.models);
 Battery.associate(connection.models);
 Service.associate(connection.models);
+BatteryService.associate(connection.models);
 
 
 module.exports = connection;

@@ -14,6 +14,8 @@ const ModeloBrandController = require('./controllers/ModeloBrandController');
 
 const DeviceController = require('./controllers/DeviceController');
 
+const BatteryServicesController = require('./controllers/BatteryServicesController');
+
 const BatteryController = require('./controllers/BatteryController');
 
 const ServicesController = require('./controllers/ServicesController');
@@ -64,6 +66,9 @@ routes.post('/batteries', BatteryController.store);
 routes.get('/batteries', BatteryController.index);
 routes.put('/batteries/:id', BatteryController.update);
 routes.delete('/batteries/:id', BatteryController.delete);
+
+routes.post('/batteries-services/:battery_id', BatteryServicesController.store);
+
 
 routes.post('/services', ServicesController.store);
 routes.get('/services', ServicesController.index);

@@ -9,15 +9,20 @@ module.exports = {
     async store(req,res){
         
         const{battery_id,device_id} = req.body;
-        // const{battery_id} = req.params;
 
         const statusExe = await Status.findOne({ where: 
             { name: 'Execução' } 
         });
+        const statusUso = await Status.findOne({ where: 
+            { name: 'Em uso' } 
+        });
         const statusFim = await Status.findOne({ where: 
             { name: 'Finalizado' } 
         });
-        
+        const statusLoading = await Status.findOne({ where: 
+            { name: 'Aguardando' } 
+        });
+             
         if(!statusExe){
             return res.status(400).json({error : 'Status não encontrado!'});
         } 
@@ -30,6 +35,22 @@ module.exports = {
         if(!battery){
             return res.status(400).json({error : 'Bateria não encontrada!'});
         }
+
+        const [updateBattery] = await Battery.update({
+            ...battery,
+            status_id:statusUso.id,
+           
+        }, {
+         where: {
+             id:battery_id,
+             status_id: { [Op.ne]:  statusLoading.id },
+         }
+       });
+
+       if (!updateBattery){
+          return res.status(404).json({error : 'Bateria não encontrado| Status inválido!'});
+       }
+
 
         const device = await Device.findByPk(device_id);
         
@@ -45,7 +66,10 @@ module.exports = {
             { 
                 where: { 
                     final_date: { [Op.eq]: null  } ,
-                    battery_id: {[Op.eq]: battery_id}              
+                    [Op.or]: [ 
+                        {battery_id: {[Op.eq]: battery_id}}, 
+                        {device_id: {[Op.eq]: device_id}}, 
+                    ],              
                 },    
                     
             },
