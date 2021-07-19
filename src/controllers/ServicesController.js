@@ -23,11 +23,8 @@ module.exports = {
             { name: 'Aguardando' } 
         });
              
-        if(!statusExe){
-            return res.status(400).json({error : 'Status não encontrado!'});
-        } 
-        if(!statusFim){
-            return res.status(400).json({error : 'Status não encontrado!'});
+        if(!statusExe || !statusFim || !statusLoading || !statusUso){
+            return res.status(400).json({error : `Status não encontrado!`});
         } 
         
         const battery = await Battery.findByPk(battery_id);
@@ -39,7 +36,6 @@ module.exports = {
         const [updateBattery] = await Battery.update({
             ...battery,
             status_id:statusUso.id,
-           
         }, {
          where: {
              id:battery_id,
@@ -48,7 +44,7 @@ module.exports = {
        });
 
        if (!updateBattery){
-          return res.status(404).json({error : 'Bateria não encontrado| Status inválido!'});
+          return res.status(404).json({error : 'Bateria não encontrado | Status inválido!'});
        }
 
 
@@ -57,6 +53,29 @@ module.exports = {
         if(!device){
             return res.status(400).json({error : 'Equipamento não encontrado!'});
         }
+
+
+        const service = await Service.findOne({ where: 
+            { 
+                device_id: {[Op.eq]: device_id},
+                final_date: { [Op.eq]: null  } 
+            } 
+        });
+
+        if(service){
+
+            const batteryLast = await Battery.findByPk(service.battery_id);
+            
+            if(!batteryLast){
+                return res.status(400).json({error : 'Bateria não encontrado!'});
+            }    
+
+            batteryLast.status_id = statusLoading.id;
+
+            batteryLast.save();
+        }
+        
+        //New Service
 
         await Service.update(
             {
@@ -74,6 +93,10 @@ module.exports = {
                     
             },
         );
+
+        
+
+
         const newService = await Service.create({
                     device_id,
                     battery_id,
