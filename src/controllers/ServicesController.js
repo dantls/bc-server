@@ -1,5 +1,6 @@
 const Device = require('../models/Device');
 const Battery = require('../models/Battery');
+const BatteryService = require('../models/BatteryService');
 const Status = require('../models/Status');
 
 const Service = require('../models/Service');
@@ -16,6 +17,9 @@ module.exports = {
         const statusUso = await Status.findOne({ where: 
             { name: 'Em uso' } 
         });
+        const statusActive = await Status.findOne({ where: 
+            { name: 'Ativo' } 
+        });
         const statusFim = await Status.findOne({ where: 
             { name: 'Finalizado' } 
         });
@@ -23,7 +27,7 @@ module.exports = {
             { name: 'Aguardando' } 
         });
              
-        if(!statusExe || !statusFim || !statusLoading || !statusUso){
+        if(!statusExe || !statusFim || !statusLoading || !statusUso || !statusActive){
             return res.status(400).json({error : `Status não encontrado!`});
         } 
         
@@ -47,7 +51,6 @@ module.exports = {
           return res.status(404).json({error : 'Bateria não encontrado | Status inválido!'});
        }
 
-
         const device = await Device.findByPk(device_id);
         
         if(!device){
@@ -55,16 +58,30 @@ module.exports = {
         }
 
 
-        const service = await Service.findOne({ where: 
+        const [updateDevice] = await Device.update({
+            ...device,
+            status_id:statusUso.id,
+        }, {
+         where: {
+             id:device_id,
+         }
+       });
+
+       if (!updateDevice){
+          return res.status(404).json({error : 'Dispositivo não encontrado | Status inválido!'});
+       }
+
+
+        const serviceBattery = await Service.findOne({ where: 
             { 
                 device_id: {[Op.eq]: device_id},
                 final_date: { [Op.eq]: null  } 
             } 
         });
 
-        if(service){
+        if(serviceBattery){
 
-            const batteryLast = await Battery.findByPk(service.battery_id);
+            const batteryLast = await Battery.findByPk(serviceBattery.battery_id);
             
             if(!batteryLast){
                 return res.status(400).json({error : 'Bateria não encontrado!'});
@@ -73,7 +90,50 @@ module.exports = {
             batteryLast.status_id = statusLoading.id;
 
             batteryLast.save();
+    
         }
+
+
+        const serviceDevice = await Service.findOne({ where: 
+            { 
+                battery_id: {[Op.eq]: battery_id},
+                final_date: { [Op.eq]: null  } 
+            } 
+        });
+
+        if(serviceDevice){
+
+            const deviceLast = await Device.findByPk(serviceDevice.device_id);
+            
+            if(!deviceLast){
+                return res.status(400).json({error : 'Dispositivo não encontrado!'});
+            }    
+
+            deviceLast.status_id = statusLoading.id;
+
+            deviceLast.save();
+    
+        }
+
+
+
+   
+
+
+        await BatteryService.update(
+            {
+                final_date: new Date(),
+                status_id: statusFim.id,
+            },
+            { 
+                where: { 
+                    final_date: { [Op.eq]: null  } ,
+                    battery_id: {[Op.eq]: battery.id}              
+                },    
+                    
+            },
+        );
+        
         
         //New Service
 
