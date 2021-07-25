@@ -1,32 +1,38 @@
-const express = require('express');
+import { Router } from 'express';
 
-const UserController = require('./controllers/UserController');
+import UserController from './controllers/UserController';
 
-const BrandController = require('./controllers/BrandController');
+import BrandController from './controllers/BrandController';
 
-const TypeController = require('./controllers/TypeController');
+import TypeController from './controllers/TypeController';
 
-const StatusController = require('./controllers/StatusController');
+import StatusController from './controllers/StatusController';
 
-const ModeloController = require('./controllers/ModeloController');
+import ModeloController from './controllers/ModeloController';
 
-const ModeloBrandController = require('./controllers/ModeloBrandController');
+import ModeloBrandController from './controllers/ModeloBrandController';
 
-const DeviceController = require('./controllers/DeviceController');
+import DeviceController from './controllers/DeviceController';
 
-const BatteryServicesController = require('./controllers/BatteryServicesController');
+import BatteryServicesController from './controllers/BatteryServicesController';
 
-const BatteryController = require('./controllers/BatteryController');
+import BatteryController from './controllers/BatteryController';
 
-const ServicesController = require('./controllers/ServicesController');
+import ServicesController from './controllers/ServicesController';
 
-const SessionController = require('./controllers/SessionController');
+import SessionController from './controllers/SessionController';
 
-const routes = express.Router();
+import authMiddleware from './middlewares/auth';
+
+const routes = new Router();
 
 routes.post('/sessions', SessionController.store);
 
+// routes.use(authMiddleware);
+// routes.post('/users', authMiddleware, UserController.store);
+
 routes.post('/users', UserController.store);
+routes.put('/users', UserController.update);
 routes.get('/users', UserController.index);
 
 
@@ -69,8 +75,7 @@ routes.delete('/batteries/:id', BatteryController.delete);
 
 routes.post('/batteries-services/:battery_id', BatteryServicesController.store);
 
-
 routes.post('/services', ServicesController.store);
 routes.get('/services', ServicesController.index);
 
-module.exports = routes;
+export default routes;

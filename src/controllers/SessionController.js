@@ -1,15 +1,37 @@
-
+import jwt from 'jsonwebtoken';
 const User = require('../models/User');
 
-module.exports = {
+import authConfig from '../config/auth';
+
+class SessionController{
     async store(req,res){
        const{email,password} = req.body;
 
-       let user = await User.findOne({where: {email,password}});
+       let user = await User.findOne({where: {email}});
 
        if(!user){
-           return res.status(200).json({error: 'Usuário/Senha incorretos.'});
+           return res.status(401).json({error: 'Usuário não encontrado'});
        }   
-       return res.json(user);
+
+       if(!(await user.checkPassword(String(password)))){
+           return res.status(401).json({error: 'Senha não confere'})
+       }
+
+       const { id, name} = user;
+
+
+
+       return res.json({
+           user:{
+               id,
+               name,
+               email
+           },
+           token: jwt.sign({id}, authConfig.secret,{
+               expiresIn: authConfig.expiresIn
+           })
+       });
     }
-};
+}
+
+export default new SessionController();

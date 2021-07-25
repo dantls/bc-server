@@ -19,9 +19,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      passwrd:{
+      password_hash:{
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      admin:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       created_at:{
         type: Sequelize.DATE,

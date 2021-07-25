@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const dbConfig = require('../config/database');
+
 const User = require('../models/User');
 const Brand = require('../models/Brand');
 const Type = require('../models/Type');
@@ -10,27 +11,39 @@ const Status = require('../models/Status');
 const Service = require('../models/Service');
 const BatteryService = require('../models/BatteryService');
 
-const connection = new Sequelize(dbConfig);
+const models = [
+  User,
+  Brand,
+  Type,
+  Modelo,
+  Device,
+  Battery,
+  Status,
+  Service,
+  BatteryService
+]
 
-User.init(connection);
-Brand.init(connection);
-Type.init(connection);
-Modelo.init(connection);
-Device.init(connection);
-Battery.init(connection);
-Status.init(connection);
-Service.init(connection);
-BatteryService.init(connection);
+class Database {
+  constructor(){
+    this.init();
+  }
 
+  init(){
+    this.connection = new Sequelize(dbConfig);
 
-Brand.associate(connection.models);
-Modelo.associate(connection.models);
-Type.associate(connection.models);
-Status.associate(connection.models);
-Device.associate(connection.models);
-Battery.associate(connection.models);
-Service.associate(connection.models);
-BatteryService.associate(connection.models);
+    models.map(model => model.init(this.connection));
+    
+    // models.map(model => model.associate(this.connection.models));
 
+    Brand.associate(this.connection.models);
+    Modelo.associate(this.connection.models);
+    Type.associate(this.connection.models);
+    Status.associate(this.connection.models);
+    Device.associate(this.connection.models);
+    Battery.associate(this.connection.models);
+    Service.associate(this.connection.models);
+    BatteryService.associate(this.connection.models);
+  }
+}
 
-module.exports = connection;
+export default new Database();
