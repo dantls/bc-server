@@ -74,8 +74,9 @@ routes.put('/batteries/:id', BatteryController.update);
 routes.delete('/batteries/:id', BatteryController.delete);
 
 routes.post('/batteries-services/:battery_id', BatteryServicesController.store);
+routes.get('/batteries-services', BatteryServicesController.index);
 
-routes.post('/services', ServicesController.store);
+routes.post('/services', ServicesController.store); 
 routes.get('/services', ServicesController.index);
 
 export default routes;

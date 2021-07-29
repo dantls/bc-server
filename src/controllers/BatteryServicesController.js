@@ -1,9 +1,9 @@
 const Battery = require('../models/Battery');
 const Status = require('../models/Status');
 const Service = require('../models/Service');
+const BatteryService = require('../models/BatteryService');
 const Device = require('../models/Device');
 
-const BatteryService = require('../models/BatteryService');
 
 const {Op}= require('sequelize');
 
@@ -101,4 +101,76 @@ module.exports = {
         
 
      },
+
+     async index(req,res){                
+
+        const statusExe = await Status.findOne({ where: 
+            { name: 'Execução' } 
+        });
+   
+        if(!statusExe){
+            return res.status(400).json({error : 'Status não encontrado!'});
+        } 
+        // const batteries = await Battery.findAll({
+        //     include: [
+        //         {association: 'modelos'}, 
+        //         {association: 'types'}, 
+        //         {association: 'status'},
+        //         // {association: 'batteries_service'}
+        //     ]
+        // });
+        // Shop.findAll({
+        //     where:{id:shopId}, 
+        //     include:[
+        //         { model:ShopAd, as:'ads', 
+        //           where:{ 
+        //                 is_valid:1, 
+        //                 is_vertify:1},   
+        //           required:false
+        //           }
+        //         ]
+        //      })
+        //      .success(function(result) {
+        //        callback(result);
+        //    });
+        const batteries = await Battery.findAll(
+                { 
+                      
+                    include:[
+                        {
+                             model: Service,
+                             as: "services",
+                             where:{ 
+                               final_date: { [Op.eq]: null  },
+                             },   
+                            attributes: ['initial_date'],
+                            required:false
+                        },
+                        {
+                             model: BatteryService,
+                             as: "battery_services", 
+                             where:{ 
+                               final_date: { [Op.eq]: null  },
+                             },   
+                            attributes: ['initial_date'],
+                            required:false
+                        },
+                        {
+                            model: Status,
+                            as: "status",
+                            attributes: ['name']
+                        },
+                    ]      
+                },
+            );
+                console.log(batteries)
+
+        // const batteries = BatteryService.findAll({
+
+        // })
+
+       
+        return res.json(batteries);
+
+    }
 }
