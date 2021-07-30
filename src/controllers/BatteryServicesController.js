@@ -4,8 +4,9 @@ const Service = require('../models/Service');
 const BatteryService = require('../models/BatteryService');
 const Device = require('../models/Device');
 
+const {Op , QueryTypes }= require('sequelize');
 
-const {Op}= require('sequelize');
+const db = require('../models')
 
 
 module.exports = {
@@ -104,13 +105,6 @@ module.exports = {
 
      async index(req,res){                
 
-        const statusExe = await Status.findOne({ where: 
-            { name: 'Execução' } 
-        });
-   
-        if(!statusExe){
-            return res.status(400).json({error : 'Status não encontrado!'});
-        } 
         // const batteries = await Battery.findAll({
         //     include: [
         //         {association: 'modelos'}, 
@@ -133,41 +127,54 @@ module.exports = {
         //      .success(function(result) {
         //        callback(result);
         //    });
-        const batteries = await Battery.findAll(
-                { 
+        // const batteries = await Battery.findAll(
+        //         { 
                       
-                    include:[
-                        {
-                             model: Service,
-                             as: "services",
-                             where:{ 
-                               final_date: { [Op.eq]: null  },
-                             },   
-                            attributes: ['initial_date'],
-                            required:false
-                        },
-                        {
-                             model: BatteryService,
-                             as: "battery_services", 
-                             where:{ 
-                               final_date: { [Op.eq]: null  },
-                             },   
-                            attributes: ['initial_date'],
-                            required:false
-                        },
-                        {
-                            model: Status,
-                            as: "status",
-                            attributes: ['name']
-                        },
-                    ]      
-                },
-            );
-                console.log(batteries)
+        //             include:[
+        //                 {
+        //                      model: Service,
+        //                      as: "services",
+        //                      where:{ 
+        //                        final_date: { [Op.eq]: null  },
+        //                      },   
+        //                     attributes: ['initial_date'],
+        //                     required:false
+        //                 },
+        //                 {
+        //                      model: BatteryService,
+        //                      as: "battery_services", 
+        //                      where:{ 
+        //                        final_date: { [Op.eq]: null  },
+        //                      },   
+        //                     attributes: ['initial_date'],
+        //                     required:false
+        //                 },
+        //                 {
+        //                     model: Status,
+        //                     as: "status",
+        //                     attributes: ['name']
+        //                 },
+        //             ]      
+        //         },
+        //     );
+        //         console.log(batteries)
 
         // const batteries = BatteryService.findAll({
 
         // })
+        const batteries = await db.sequelize.query(
+        `select distinct 
+            bs.id,
+            b.code,
+            st.name as status , 
+            bs.initial_date as initial_date_battery_service ,
+            s.initial_date as initial_date_service from batteries b 
+                inner join status st on st.id = b.status_id 
+                left join services s on b.id = s.battery_id and s.final_date is null
+                left join battery_services bs on b.id = bs.battery_id and bs.final_date is null`
+        , 
+        
+        { type: QueryTypes.SELECT });
 
        
         return res.json(batteries);
