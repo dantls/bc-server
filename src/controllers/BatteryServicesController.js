@@ -164,8 +164,10 @@ module.exports = {
         // })
         const batteries = await db.sequelize.query(
         `select distinct 
-            bs.id,
+            bs.id as batteryservices_id,
             b.code,
+            b.id as battery_id,
+            st.id as status_id,
             st.name as status , 
             bs.initial_date as initial_date_battery_service ,
             s.initial_date as initial_date_service from batteries b 

@@ -22,6 +22,8 @@ import ServicesController from './controllers/ServicesController';
 
 import SessionController from './controllers/SessionController';
 
+import BatteryServicesFinishController from './controllers/BatteryServicesFinishController';
+
 import authMiddleware from './middlewares/auth';
 
 const routes = new Router();
@@ -75,6 +77,8 @@ routes.delete('/batteries/:id', BatteryController.delete);
 
 routes.post('/batteries-services/:battery_id', BatteryServicesController.store);
 routes.get('/batteries-services', BatteryServicesController.index);
+
+routes.post('/batteries-full-charge/:battery_id', BatteryServicesFinishController.store)
 
 routes.post('/services', ServicesController.store); 
 routes.get('/services', ServicesController.index);

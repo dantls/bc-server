@@ -71,6 +71,21 @@ module.exports = {
           return res.status(404).json({error : 'Dispositivo não encontrado | Status inválido!'});
        }
 
+       const serviceExists = await Service.findOne(
+        
+            { 
+                where: { 
+                    final_date: { [Op.eq]: null  } ,
+                    battery_id: {[Op.eq]: battery_id}, 
+                    device_id: {[Op.eq]: device_id},                  
+                },    
+                    
+            },
+        );
+        if (serviceExists){
+            return res.status(404).json({error : 'Serviço ainda não finalizado.'});
+        }
+
 
         const serviceBattery = await Service.findOne({ where: 
             { 
@@ -109,16 +124,11 @@ module.exports = {
                 return res.status(400).json({error : 'Dispositivo não encontrado!'});
             }    
 
-            deviceLast.status_id = statusLoading.id;
+            deviceLast.status_id = statusActive.id;
 
             deviceLast.save();
     
         }
-
-
-
-   
-
 
         await BatteryService.update(
             {
@@ -243,17 +253,17 @@ module.exports = {
                         {
                             model: Battery,
                             as: "batteries",
-                            attributes: ['code']
+                            attributes: ['code','id']
                         },
                         {
                             model: Device,
                             as: "devices",
-                            attributes: ['code']
+                            attributes: ['code','id']
                         },
                         {
                             model: Status,
                             as: "status",
-                            attributes: ['name']
+                            attributes: ['name','id']
                         },
                     ]      
                 },
