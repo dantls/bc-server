@@ -14,7 +14,7 @@ class UserController {
             return res.status(400).json({error: 'Dados incorretos.'})
         }
 
-        const{email} = req.body;
+        const{email, admin ,name, password} = req.body;
 
         if(!email){
             return res.status(400).json({error : 'E-mail não informado'});
@@ -28,18 +28,12 @@ class UserController {
             return res.status(400).json({error : 'Usuário já cadastrado.!'});
         }
 
-        const {
-            id,
-            name,
-            admin
-        } = await User.create({name,email,password, admin});
+        const user = await User.create({name,email,password, admin});
 
-        return res.json({
-            id,
-            name,
-            email,
-            admin
-        });
+        delete user.password
+        delete user.password_hash
+
+        return res.json(user);
 
     }
     async index(req,res){
